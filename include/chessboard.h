@@ -6,6 +6,7 @@
 #include <SFML/System.hpp>
 
 class Cell;
+class Piece;
 
 class Chessboard{
     private:
@@ -14,20 +15,20 @@ class Chessboard{
 
         void emptyCell(Cell* cell);
         
-        void setCell(Cell* cellA, char pieceSymbol);
+        void setCell(Cell* cellA, Piece* piece);
         
         void updateFEN();
         
-        void updateCharGrid();
+        void createCharGrid();
         
-        void updateObjGrid();
+        void createObjGrid();
         
-        void updateGrid();
+        void createGrid();
         
     public:
         // The side of the board
         int side;
-        
+       
         // Stores an 8x8 grid containg a character for each piece in the chessboard
         char charGrid[8][8];
 
@@ -45,17 +46,23 @@ class Chessboard{
 
         std::string castleRights;
 
-        Chessboard();
+        Chessboard(std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
         ~Chessboard();
 
         void movePiece(Cell* cellA, Cell* cellB);
 
+        void movePiece(Piece* piece, Cell* targetCell);
+
         bool squareIsOccupied(int x, int y);
 
         bool squareIsOccupied(sf::Vector2i pos);
 
-        sf::Sprite getSprite();
+        bool isInsideBoard(int x, int y);
+
+        bool isInsideBoard(sf::Vector2i pos);
+
+        sf::Sprite& getSprite();
 };
 
 #endif

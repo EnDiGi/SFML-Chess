@@ -1,35 +1,41 @@
 
 #include "../include/utils.h"
-#include <iostream>
 #include "../include/chessboard.h"
 #include "../include/pieces/pawn.h"
+#include "../include/pieces/bishop.h"
+#include "../include/pieces/rook.h"
+#include "../include/pieces/knight.h"
+#include "../include/pieces/queen.h"
+#include "../include/pieces/king.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <iostream>
 
-
-Piece* getPiece(char symbol, Chessboard &board, sf::Vector2i pos){
+Piece* getPiece(char symbol, Chessboard &board, sf::Vector2i pos, bool moved){
 
     switch(std::tolower(symbol)){
         case 'p':
-            return new Pawn(symbol, board, pos);
+            return new Pawn(symbol, board, pos, moved);
             break;
-        // case 'r':
-        //     return new Rook(symbol, board, pos);
-        //     break;
-        // case 'n':
-        //     return new Knight(symbol, board, pos);
-        //     break;
-        // case 'b':
-        //     return new Bishop(symbol, board, pos);
-        //     break;
-        // case 'k':
-        //     return new King(symbol, board, pos);
-        //     break;
-        // case 'q':
-        //     return new Queen(symbol, board, pos);
-        //     break;
+        case 'r':
+            return new Rook(symbol, board, pos, moved);
+            break;
+        case 'n':
+            return new Knight(symbol, board, pos, moved);
+            break;
+        case 'b':
+            return new Bishop(symbol, board, pos, moved);
+            break;
+        case 'k':
+            return new King(symbol, board, pos, moved);
+            break;
+        case 'q':
+            return new Queen(symbol, board, pos, moved);
+            break;
         default:
-            return new Pawn(symbol, board, pos);
+            return nullptr;
+            break;
     }
 }
 

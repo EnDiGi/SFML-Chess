@@ -14,19 +14,20 @@ class Piece{
     protected:
         // Pointer to the chessboard
         Chessboard* board;
+        // The direction in which the pawn is facing. Used for calculations. 1 = white, -1 = black
+        int direction;
+        
+        sf::Texture texture;
+        
+        
+    public:
+        sf::Sprite sprite;
+        // Indicates if the piece moved. Used for castling
+        bool moved = false;        
         // Contains the cells in which the piece can move
         std::vector<sf::Vector2i> canMove;
         // Contains the cells in which the piece can take other pieces
         std::vector<sf::Vector2i> canTake;
-        // The direction in which the pawn is facing. Used for calculations. 1 = white, -1 = black
-        int direction;
-
-        sf::Texture texture;
-
-        
-    public:
-        sf::Sprite sprite;
-
         std::string name;
         // The piece's color ('w' for white 'b' for black)
         char color;
@@ -35,13 +36,13 @@ class Piece{
         // Stores the piece's relative to the grid (row, column)
         sf::Vector2i position;
 
-        Piece(char symbol, Chessboard &board, sf::Vector2i pos);
+        Piece(char symbol, Chessboard &board, sf::Vector2i pos, bool moved);
 
         virtual ~Piece();
         
         virtual void updateMoves();
 
-        virtual void makeMove(Cell* target);
+        void makeMove(Cell* target);
 
         std::string getSpritePath(char symbol);
 

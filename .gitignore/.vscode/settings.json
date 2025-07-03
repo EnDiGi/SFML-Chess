@@ -1,0 +1,23 @@
+{
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.default.compilerPath": "c:/Users/enric/librerie/winlibs/mingw64/bin/g++.exe",
+    "files.associations": {
+        "*.brainfuck": "brainfuck",
+        "*.bf": "brainfuck",
+        "*.java": "java",
+        "optional": "cpp",
+        "cstdint": "cpp",
+        "array": "cpp",
+        "chrono": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "format": "cpp",
+        "initializer_list": "cpp",
+        "span": "cpp",
+        "text_encoding": "cpp"
+    }
+}

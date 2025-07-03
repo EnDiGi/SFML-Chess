@@ -11,25 +11,41 @@
 #include <string>
 #include <cctype>
 
-Chessboard::Chessboard(): texture("assets\\chessboard.png"), sprite(texture){
+Chessboard::Chessboard(std::string fen): texture("..\\assets\\chessboard.png"), sprite(texture){
     this->side = 8;
     this->turn = 'w';
-    this->fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    this->updateGrid();
+    this->fenString = fen;
+    this->createGrid();
 }
 
 Chessboard::~Chessboard(){
     for(int i = 0; i < this->side; i++){
         for(int j = 0; j < this->side; j++){
-            delete this->objectGrid[i][j]->piece;
+            if(this->objectGrid[i][j]->piece != nullptr){
+                delete this->objectGrid[i][j]->piece;
+            }
             delete this->objectGrid[i][j];
         }
     }
 }
 
 void Chessboard::movePiece(Cell* cellA, Cell *cellB){
-    this->setCell(cellB, cellA->piece->symbol);
+
+    this->setCell(cellB, cellA->piece);
+    cellB->piece->position = sf::Vector2i(cellB->row, cellB->col);
     this->emptyCell(cellA);
+
+    std::cout << std::endl;
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            std::cout << this->charGrid[i][j] << " ";
+        }
+        std::cout << '\n';
+    }
+}
+
+void Chessboard::movePiece(Piece* piece, Cell* targetCell){
+    this->movePiece(piece->getCell(), targetCell);
 }
 
 void Chessboard::emptyCell(Cell* cell){
@@ -37,22 +53,31 @@ void Chessboard::emptyCell(Cell* cell){
     cell->piece = nullptr;
 }
 
-void Chessboard::setCell(Cell* cell, char pieceSymbol){
-    this->charGrid[cell->row][cell->col] = cell->piece->symbol;
-    cell->piece = getPiece(pieceSymbol, *this, sf::Vector2i({cell->row, cell->col}));
+void Chessboard::setCell(Cell* cell, Piece* piece){
+    this->charGrid[cell->row][cell->col] = piece->symbol;
+    delete cell->piece;
+    cell->piece = getPiece(piece->symbol, *this, sf::Vector2i({cell->row, cell->col}), piece->moved);
 }
 
-bool Chessboard::squareIsOccupied(int x, int y){
-    return charGrid[x][y] != ' ';
+bool Chessboard::squareIsOccupied(int row, int col){
+    return charGrid[row][col] != ' ';
 }
 
 bool Chessboard::squareIsOccupied(sf::Vector2i pos){
     return this->squareIsOccupied(pos.x, pos.y);
 }
 
-void Chessboard::updateGrid(){
-    this->updateCharGrid();
-    this->updateObjGrid();
+bool Chessboard::isInsideBoard(int x, int y){
+    return (x >= 0) && (x < 8) && (y >= 0) && (y < 8);
+}
+
+bool Chessboard::isInsideBoard(sf::Vector2i pos){
+    return isInsideBoard(pos.x, pos.y);
+}
+
+void Chessboard::createGrid(){
+    this->createCharGrid();
+    this->createObjGrid();
 }
 
 void Chessboard::updateFEN(){
@@ -81,7 +106,10 @@ void Chessboard::updateFEN(){
     }
 }
 
-void Chessboard::updateCharGrid() {
+/**
+ * Updates the charGrid using the fen string
+ */
+void Chessboard::createCharGrid() {
     std::string sep = "/";
     std::string fenBoard = this->fenString.substr(0, this->fenString.find(' '));
     std::vector<std::string> lines = split(fenBoard, sep);
@@ -94,23 +122,31 @@ void Chessboard::updateCharGrid() {
             if (std::isdigit(ch)) {
                 int emptySpaces = ch - '0';
                 for (int k = 0; k < emptySpaces; k++) {
-                    charGrid[7 - i][col++] = ' ';  // FEN parte dalla riga 8, quindi 7-i
+                    charGrid[i][col++] = ' ';  // FEN parte dalla riga 8, quindi 7-i
                 }
             } else {
-                charGrid[7 - i][col++] = ch;
+                charGrid[i][col++] = ch;
             }
         }
     }
 }
 
 
-void Chessboard::updateObjGrid(){
+
+/**
+ * Updates the object grid using the char grid
+ */
+void Chessboard::createObjGrid(){
+    
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             std::cout << this->charGrid[i][j] << " ";
         }
         std::cout << '\n';
     }
+
+
+    // * Creating new cells and putting in them pieces
     for(int i = 0; i < this->side; i++){
         for(int j = 0; j < this->side; j++){
 
@@ -118,23 +154,16 @@ void Chessboard::updateObjGrid(){
 
             Cell* cell = new Cell(i, j, *this);
             this->objectGrid[i][j] = cell;
+            
             if(ch == ' '){
                 this->objectGrid[i][j]->piece = nullptr;
                 continue;
             }
-
-
-
-            if(getName(ch) == "pawn"){
-                Pawn* pawn = new Pawn(ch, *this, sf::Vector2i({i, j}));
-                cell->setPiece(pawn);
-            }
-
-            
+            cell->piece = getPiece(ch, *this, sf::Vector2i({cell->row, cell->col}), false);
         }
     }
 }
 
-sf::Sprite Chessboard::getSprite(){
+sf::Sprite& Chessboard::getSprite(){
     return this->sprite;
 }

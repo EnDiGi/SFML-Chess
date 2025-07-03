@@ -16,6 +16,8 @@ class Cell: public sf::RectangleShape{
         int col;
         double width;
         double height;
+        // Position in pixels
+        sf::Vector2f absPosition;
         // Pointer to the chessboard
         Chessboard* board;
 

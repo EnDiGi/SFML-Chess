@@ -1,1 +1,0 @@
-g++ src/main.cpp src/chessboard.cpp src/pieces/piece.cpp src/cell.cpp src/pieces/pawn.cpp src/utils.cpp -I "C:\Users\enric\librerie\SFML-3.0.0\include" -L "C:\Users\enric\librerie\SFML-3.0.0\lib" -lsfml-graphics -lsfml-window -lsfml-system -o bin/chess.exe

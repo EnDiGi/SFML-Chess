@@ -22,12 +22,10 @@ class Pawn: public Piece{
          * @param board a pointer to the current board
          * @param pos the position (row and column)
          */
-        Pawn(char symbol, Chessboard &board, sf::Vector2i pos);
+        Pawn(char symbol, Chessboard &board, sf::Vector2i pos, bool moved);
 
         // Updates available moves and takes
         void updateMoves() override;
-
-        void makeMove(Cell* target) override;
 };
 
 #endif

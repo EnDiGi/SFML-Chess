@@ -31,6 +31,6 @@ std::string getName(char symbol);
 
 char getSymbol(char color, std::string name);
 
-Piece* getPiece(char symbol, Chessboard &board, sf::Vector2i position);
+Piece* getPiece(char symbol, Chessboard &board, sf::Vector2i position, bool moved);
 
 #endif
