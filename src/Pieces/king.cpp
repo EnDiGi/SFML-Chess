@@ -34,7 +34,7 @@ void King::updateMoves(){
         if(this->board->isInsideBoard(pos))
         {
 
-            bool isCellsafe = this->isSafe();
+            bool isCellsafe = this->isSafe(pos);
 
             if(!isCellsafe) continue;
             if(!this->board->squareIsOccupied(pos))
