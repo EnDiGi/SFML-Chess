@@ -47,7 +47,7 @@ Cell* Piece::getCell(){
 }
 
 std::string Piece::getSpritePath(char symbol){
-    return std::string("..\\assets\\pieces\\") + std::string(1, getColor(symbol)) + getName(symbol) + std::string(".png");
+    return std::string("assets\\pieces\\") + std::string(1, getColor(symbol)) + getName(symbol) + std::string(".png");
 }
 
 void Piece::setPosition(){    

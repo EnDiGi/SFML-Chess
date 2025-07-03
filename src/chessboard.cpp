@@ -11,7 +11,7 @@
 #include <string>
 #include <cctype>
 
-Chessboard::Chessboard(std::string fen): texture("..\\assets\\chessboard.png"), sprite(texture){
+Chessboard::Chessboard(std::string fen): texture("assets\\chessboard.png"), sprite(texture){
     this->side = 8;
     this->turn = 'w';
     this->fenString = fen;
