@@ -7,6 +7,8 @@
 
 class Cell;
 class Piece;
+class King;
+class Move;
 
 class Chessboard{
     private:
@@ -41,8 +43,13 @@ class Chessboard{
         // Stores a FEN string containing the board
         std::string fenString;
 
+        // Contains every move played in the game
+        std::vector<Move*> moves;
+
         // Stores 'w' or 'b' depending on whose turn it is
         char turn;
+
+        int turnNumber = 0;
 
         std::string castleRights;
 
@@ -61,6 +68,12 @@ class Chessboard{
         bool isInsideBoard(int x, int y);
 
         bool isInsideBoard(sf::Vector2i pos);
+
+        bool noPieceInBetweenHorizontally(Piece* pieceA, Piece* pieceB);
+
+        std::vector<Piece*> getPieceOnBoard(char color, std::string name);
+
+        bool isCheckmate(char color);
 
         sf::Sprite& getSprite();
 };

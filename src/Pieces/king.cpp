@@ -3,6 +3,7 @@
 #include "../../include/pieces/piece.h"
 #include "../../include/chessboard.h"
 #include "../../include/cell.h"
+#include "../../include/pieces/rook.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <iostream>
@@ -40,12 +41,14 @@ void King::updateMoves(){
             if(!this->board->squareIsOccupied(pos))
             {
                 this->canMove.push_back(pos);
+                this->couldTake.push_back(pos);
             } 
             else 
             {
                 if(this->board->objectGrid[pos.x][pos.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(pos);
+                this->couldTake.push_back(pos);
                 }
                 continue;
             }
@@ -56,7 +59,22 @@ void King::updateMoves(){
 
 
 
-    // * Check for castling kingside
+    // * Check for castling
+    std::vector<Piece*> rooks = this->board->getPieceOnBoard(this->color, "rook");
+
+    if(rooks.empty()) return;
+
+    for(Piece* rook: rooks)
+    {
+        if(!this->moved && !rook->moved &&
+            this->position == this->initialPos &&
+            rook->position == rook->initialPos && 
+            this->board->noPieceInBetweenHorizontally(this, rook))
+        {
+            int direction = rook->position.y < this->position.y ? -1 : 1;
+            this->canCastleWith.push_back({this->position.x, this->position.y + 2 * direction});
+        }
+    }
 }
 
 bool King::isSafe(){
@@ -69,10 +87,16 @@ bool King::isSafe(sf::Vector2i cellPos){
         for(int j = 0; j < 8; j++)
         {
             Piece* piece = this->board->objectGrid[i][j]->piece;
-            if(piece == nullptr) continue;
-            if(piece->color == this->color) continue;
+            if(piece == nullptr){
+                continue;
+            }
+            if(piece->color == this->color) 
+            {
+                continue;
+            }
+            // piece->updateMoves();
 
-            if(std::find(piece->canMove.begin(), piece->canMove.end(), cellPos) != piece->canMove.end())
+            if(std::find(piece->couldTake.begin(), piece->couldTake.end(), cellPos) != piece->couldTake.end())
             {
                 return false;
             }

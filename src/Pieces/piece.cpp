@@ -12,6 +12,8 @@ Piece::Piece(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): text
 
     this->sprite.setScale(sf::Vector2f(0.351, 0.351));
 
+    this->initialPos = pos;
+
     this->moved = moved;
     this->board = &board;
     this->position = pos;
@@ -47,7 +49,7 @@ Cell* Piece::getCell(){
 }
 
 std::string Piece::getSpritePath(char symbol){
-    return std::string("assets\\pieces\\") + std::string(1, getColor(symbol)) + getName(symbol) + std::string(".png");
+    return std::string("..\\assets\\pieces\\") + std::string(1, getColor(symbol)) + getName(symbol) + std::string(".png");
 }
 
 void Piece::setPosition(){    

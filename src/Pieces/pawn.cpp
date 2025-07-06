@@ -59,9 +59,12 @@ void Pawn::updateMoves(){
                 if(board->objectGrid[forwardLeftCell.x][forwardLeftCell.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(forwardLeftCell);
+                    this->couldTake.push_back(forwardLeftCell);
                 }
             }
         }
+
+        this->couldTake.push_back(forwardLeftCell);
     }
     // Checks if the pawn is on the right side of the board
     if(this->position.y != 7)
@@ -76,8 +79,11 @@ void Pawn::updateMoves(){
                 if(board->objectGrid[forwardRightCell.x][forwardRightCell.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(forwardRightCell);
+                    this->couldTake.push_back(forwardRightCell);
                 }
             }
         }
+
+        this->couldTake.push_back(forwardRightCell);
     }
 }

@@ -34,12 +34,14 @@ void Knight::updateMoves(){
             if(!this->board->squareIsOccupied(pos))
             {
                 this->canMove.push_back(pos);
+                this->couldTake.push_back(pos);
             } 
             else 
             {
                 if(this->board->objectGrid[pos.x][pos.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(pos);
+                    this->couldTake.push_back(pos);
                 }
                 continue;
             }

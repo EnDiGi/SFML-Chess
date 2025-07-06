@@ -33,4 +33,8 @@ char getSymbol(char color, std::string name);
 
 Piece* getPiece(char symbol, Chessboard &board, sf::Vector2i position, bool moved);
 
+char getColumnLetter(int col);
+
+int getRowNumber(int row);
+
 #endif

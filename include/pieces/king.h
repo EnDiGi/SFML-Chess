@@ -15,8 +15,6 @@ class Cell;
 class King: public Piece{
 
     public:
-        // - if didn't castle, k if it castled kingside, q if it castled queenside
-        char castled = '-';
 
         /**
          * Constructor for King class

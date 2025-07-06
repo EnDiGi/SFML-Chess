@@ -2,7 +2,7 @@
 #include "../include/chessboard.h"
 #include "../include/cell.h"
 #include "../include/pieces/piece.h"
-#include "../include/pieces/pawn.h"
+#include "../include/move.h"
 #include "../include/utils.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -11,7 +11,7 @@
 #include <string>
 #include <cctype>
 
-Chessboard::Chessboard(std::string fen): texture("assets\\chessboard.png"), sprite(texture){
+Chessboard::Chessboard(std::string fen): texture("..\\assets\\chessboard.png"), sprite(texture){
     this->side = 8;
     this->turn = 'w';
     this->fenString = fen;
@@ -27,21 +27,37 @@ Chessboard::~Chessboard(){
             delete this->objectGrid[i][j];
         }
     }
+    for(Move* move : this->moves){
+        delete move;
+    }
 }
 
 void Chessboard::movePiece(Cell* cellA, Cell *cellB){
+    
+    
+    Piece* movingPiece = cellA->piece;
+    if(movingPiece == nullptr) return;
 
-    this->setCell(cellB, cellA->piece);
+    movingPiece->moved = true;
+
+
+    if(turn == 'w') this->turnNumber++;
+
+    Move* move = new Move(movingPiece->color, this->turnNumber, movingPiece, cellB, cellB->piece != nullptr);
+    this->moves.push_back(move);
+
+    this->setCell(cellB, movingPiece);
     cellB->piece->position = sf::Vector2i(cellB->row, cellB->col);
     this->emptyCell(cellA);
 
-    std::cout << std::endl;
-    for(int i = 0; i < 8; i++){
-        for(int j = 0; j < 8; j++){
-            std::cout << this->charGrid[i][j] << " ";
-        }
-        std::cout << '\n';
-    }
+    // std::cout << std::endl;
+    // for(int i = 0; i < 8; i++){
+    //     for(int j = 0; j < 8; j++){
+    //         std::cout << this->charGrid[i][j] << " ";
+    //     }
+    //     std::cout << '\n';
+    // }
+
 }
 
 void Chessboard::movePiece(Piece* piece, Cell* targetCell){
@@ -163,6 +179,76 @@ void Chessboard::createObjGrid(){
         }
     }
 }
+
+std::vector<Piece*> Chessboard::getPieceOnBoard(char color, std::string name)
+{
+
+    std::vector<Piece*> pieces;
+
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            Cell* cell = this->objectGrid[i][j];
+
+            if(cell->piece == nullptr) continue;
+
+            if(cell->piece->name == name && cell->piece->color == color){
+                pieces.push_back(cell->piece);
+            }
+
+        }
+    }
+    return pieces;
+}
+
+bool Chessboard::noPieceInBetweenHorizontally(Piece* pieceA, Piece* pieceB){
+    sf::Vector2i pos = pieceA->position;
+    
+    // Checks on the right of the piece
+    for(int i = 1; i < 8; i++){
+        // The next position on the same row
+        Cell* cellToCheck = this->objectGrid[pos.x][pos.y + i];
+        if(cellToCheck->piece == pieceB) return true;
+        if(cellToCheck->piece != nullptr) break; // There is a piece
+    }
+    
+    // Checks on the left
+    for(int i = 1; i < 8; i++){
+        // The next position on the same row
+        Cell* cellToCheck = this->objectGrid[pos.x][pos.y - i];
+        if(cellToCheck->piece == pieceB) return true;
+        if(cellToCheck->piece != nullptr) break; // There is a piece
+    }
+
+    return false;
+}
+
+
+bool Chessboard::isCheckmate(char color){
+    std::vector<Piece*> kings = this->getPieceOnBoard(color, "king");
+    if(kings.empty()) return true;
+    Piece* king = kings[0];
+
+
+    if(king->canMove == king->canTake && king->canMove.size() == 0){
+        for(int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                Cell* cell = this->objectGrid[i][j];
+
+                if(cell->piece == nullptr) continue;
+                
+                if(cell->piece->color != color) continue;
+                
+                // TODO: implement check if any piece can block the check
+            }
+        }
+    }
+
+    return false;
+}
+
+
 
 sf::Sprite& Chessboard::getSprite(){
     return this->sprite;

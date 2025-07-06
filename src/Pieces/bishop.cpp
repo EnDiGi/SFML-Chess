@@ -28,12 +28,14 @@ void Bishop::updateMoves(){
             if(!this->board->squareIsOccupied(celltoCheck))
             {
                 this->canMove.push_back(celltoCheck);
+                this->couldTake.push_back(celltoCheck);
             } 
             else 
             {
                 if(this->board->objectGrid[celltoCheck.x][celltoCheck.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(celltoCheck);
+                    this->couldTake.push_back(celltoCheck);
                 }
                 break;
             }
@@ -50,12 +52,14 @@ void Bishop::updateMoves(){
             if(!this->board->squareIsOccupied(celltoCheck))
             {
                 this->canMove.push_back(celltoCheck);
+                this->couldTake.push_back(celltoCheck);
             } 
             else 
             {
                 if(this->board->objectGrid[celltoCheck.x][celltoCheck.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(celltoCheck);
+                    this->couldTake.push_back(celltoCheck);
                 }
                 break;
             }
@@ -72,12 +76,14 @@ void Bishop::updateMoves(){
             if(!this->board->squareIsOccupied(celltoCheck))
             {
                 this->canMove.push_back(celltoCheck);
+                    this->couldTake.push_back(celltoCheck);
             } 
             else 
             {
                 if(this->board->objectGrid[celltoCheck.x][celltoCheck.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(celltoCheck);
+                    this->couldTake.push_back(celltoCheck);
                 }
                 break;
             }
@@ -94,12 +100,14 @@ void Bishop::updateMoves(){
             if(!this->board->squareIsOccupied(celltoCheck))
             {
                 this->canMove.push_back(celltoCheck);
+                this->couldTake.push_back(celltoCheck);
             } 
             else 
             {
                 if(this->board->objectGrid[celltoCheck.x][celltoCheck.y]->piece->color != this->color)
                 {
                     this->canTake.push_back(celltoCheck);
+                    this->couldTake.push_back(celltoCheck);
                 }
                 break;
             }

@@ -104,3 +104,11 @@ char getSymbol(char color, std::string name){
 
     return symbol;
 }
+
+char getColumnLetter(int col){
+    return 'a' + col;
+}
+
+int getRowNumber(int row){
+    return row + 1;
+}
