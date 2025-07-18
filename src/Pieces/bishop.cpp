@@ -13,7 +13,7 @@ Bishop::Bishop(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): Pi
     ;
 }
 
-void Bishop::updateMoves(){
+void Bishop::updatePseudoMoves(){
 
     this->canMove = {};
     this->canTake = {};
@@ -36,16 +36,16 @@ void Bishop::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check down-left diagonal
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x + i, this->position.y - i};
@@ -61,20 +61,20 @@ void Bishop::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check up-right diagonal
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x - i, this->position.y + i};
-
+        
         if(this->board->isInsideBoard(cellToCheck))
         {
             this->couldTake.push_back(cellToCheck);
@@ -86,16 +86,16 @@ void Bishop::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check up-left diagonal
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x - i, this->position.y - i};
@@ -111,11 +111,11 @@ void Bishop::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board

@@ -13,13 +13,10 @@ class Move{
     
     public:
 
-        // The object grid before the move was made
-        Cell boardBefore[8][8];
-        // The object grid after the move was made
-        Cell boardAfter[8][8];
-
         // Chessboard
         Chessboard* board;
+
+        bool legal;
 
         // The move number
         int moveNumber;
@@ -29,6 +26,7 @@ class Move{
 
         // The target cell
         Cell* targetCell;
+        Piece* capturedPiece;
 
         // True if there was a capture
         bool capture;

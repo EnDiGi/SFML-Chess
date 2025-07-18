@@ -49,7 +49,11 @@ class Piece{
 
         virtual ~Piece();
         
-        virtual void updateMoves();
+        void updateMoves(bool onlyPseudo = false);
+
+        virtual void updatePseudoMoves();
+
+        void updateLegalMoves();
 
         void makeMove(Cell* target);
 

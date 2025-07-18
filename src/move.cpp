@@ -15,15 +15,7 @@ Move::Move(int moveNumber, Piece* piece, Cell* target, bool capture, Chessboard*
     this->capture = capture;
     this->board = board;
 
-    for(int i = 0; i < 8; i++){
-        for(int j = 0; j < 8; j++){
-            this->boardBefore[i][j] = *board->objectGrid[i][j];
-            this->boardAfter[i][j] = *board->objectGrid[i][j];
-        }
-    }
-
-    this->boardAfter[piece->position.x][piece->position.y].piece = nullptr;
-    this->boardAfter[target->row][target->col].piece = piece;
+    this->capturedPiece = this->targetCell->piece != nullptr ? targetCell->piece : nullptr;
 
     this->createId();
 }
@@ -53,31 +45,41 @@ void Move::createId(){
     this->id += std::string(1, getColumnLetter(this->targetCell->col));
     this->id += std::to_string(getRowNumber(this->targetCell->row));
 
-    std::vector<Piece*> kings = this->board->getPieceOnBoard(opponent(this->piece->color), "king", boardAfter);
+    std::vector<Piece*> kings = this->board->getPieceOnBoard(opponent(this->piece->color), "king");
     if(kings.empty()){
         return;
-    }
-
-    if(!(kings[0]->isSafe(this->boardAfter))){
-        this->id += "+";
     }
 }
 
 bool Move::isLegal(){
 
+    this->board->movePiece(this->piece, this->targetCell, true, false);
+
+    // Updates only pseudo-moves (doesn't check if they put the king in check)
+    this->board->updateMoves(true);
+
     // std::cout << "checking moving a " << piece->name << " in " 
     //           << this->piece->position.x << " " << this->piece->position.y << " to " 
     //           << this->targetCell->row  << " " << this->targetCell->col << std::endl;
 
-    std::vector<Piece*> kings = board->getPieceOnBoard(this->piece->color, "king", this->boardAfter);
-    // If there isn't the king because a piece "ate" it
+    std::vector<Piece*> kings = board->getPieceOnBoard(this->piece->color, "king");
+    // If there isn't the king because a piece "ate" it or because there isn't
     if(kings.empty()){
+        this->board->undoMove();
+        std::cout << "no king if this move" << std::endl;
         return false;
     }
     // Check for check
-    if(!(kings[0]->isSafe(boardAfter))){
+    if(!(kings[0]->isSafe())){
         // If after this move the king would be in check
+        this->board->undoMove();
+        std::cout << "king not safe after this move" << std::endl;
         return false;
     }
+
+    this->board->undoMove();
+
+    this->board->updateMoves(true);
+
     return true;
 }

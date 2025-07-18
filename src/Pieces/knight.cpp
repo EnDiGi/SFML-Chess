@@ -12,7 +12,7 @@ Knight::Knight(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): Pi
     ;
 }
 
-void Knight::updateMoves(){
+void Knight::updatePseudoMoves(){
 
     this->canMove = {};
     this->canTake = {};

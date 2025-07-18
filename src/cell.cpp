@@ -35,3 +35,10 @@ void Cell::setPiece(Piece* piece){
 bool Cell::isEmpty(){
     return this->piece == nullptr;
 }
+
+bool Cell::hasEnemyPiece(char color){
+
+    if(this->piece == nullptr) return false;
+
+    return this->piece->color != color;
+}

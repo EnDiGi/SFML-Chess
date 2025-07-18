@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include <stack>
+
 class Cell;
 class Piece;
 class King;
@@ -21,45 +23,49 @@ class Chessboard{
         
         void updateFEN();
         
-        void createCharGrid();
-        
         void createObjGrid();
+
+        std::vector<Piece*> eatenPieces;
+
         
-        void createGrid();
-        
-    public:
+        public:
         // The side of the board
         int side;
-       
-        // Stores an 8x8 grid containg a character for each piece in the chessboard
-        char charGrid[8][8];
-
+        
         /*  Stores the cell object for each cell of the chessboard
             N.B.: If the cell is empty the value will be nulltpr
             N.B.: objectGrid[0][0] is the top left corner
         */
-        Cell* objectGrid[8][8];
-
-        // Stores a FEN string containing the board
-        std::string fenString;
-
+       Cell* objectGrid[8][8];
+       
+       // Stores a FEN string containing the board
+       std::string fenString;
+       
         // Contains every move played in the game
-        std::vector<Move*> moves;
+        std::stack<Move> moves;
 
         // Stores 'w' or 'b' depending on whose turn it is
         char turn;
-
+        
         int turnNumber = 0;
-
+        
         std::string castleRights;
-
+        
         Chessboard(std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0");
-
+        
         ~Chessboard();
+        
+        void updateMoves(bool onlyPseudo = false);
 
-        void movePiece(Cell* cellA, Cell* cellB, bool addMove = true);
+        void movePiece(Cell* cellA, Cell* cellB, bool addMove = true, bool wasMoved = true);
 
-        void movePiece(Piece* piece, Cell* targetCell, bool addMove = true);
+        void movePiece(Piece* piece, Cell* targetCell, bool addMove = true, bool wasMoved = true);
+
+        void addMove(Piece* piece, Cell* cell);
+
+        void undoMove();
+
+        void updateEnemyPseudoMoves(char color);
 
         bool squareIsOccupied(int x, int y);
 
@@ -72,8 +78,6 @@ class Chessboard{
         bool noPieceInBetweenHorizontally(Piece* pieceA, Piece* pieceB);
 
         std::vector<Piece*> getPieceOnBoard(char color, std::string name);
-        
-        std::vector<Piece*> getPieceOnBoard(char color, std::string name, Cell grid[8][8]);
 
         bool isCheckmate(char color);
 

@@ -12,7 +12,7 @@ Pawn::Pawn(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): Piece(
     ;
 }
 
-void Pawn::updateMoves(){
+void Pawn::updatePseudoMoves(){
 
     this->canMove = {};
     this->canTake = {};
@@ -31,15 +31,15 @@ void Pawn::updateMoves(){
     if(this->board->isInsideBoard(forwardCell))
     {
 
-        if(!(this->board->squareIsOccupied(forwardCell))){
+        if(board->cellAt(forwardCell)->isEmpty()){
             this->canMove.push_back(forwardCell);
     
             sf::Vector2i forward2Cell = {this->position.x- 2*this->direction, this->position.y};
     
             // Handle first move double shift
-            if(( (this->position.x == 1 && this->color == 'b') || (this->position.x == 6 && this->color == 'w') ) && this->board->isInsideBoard(forward2Cell))
+            if(((this->position.x == 1 && this->color == 'b') || (this->position.x == 6 && this->color == 'w')) && this->board->isInsideBoard(forward2Cell))
             {
-                if(!(this->board->squareIsOccupied(forward2Cell)))
+                if(board->cellAt(forward2Cell)->isEmpty())
                 {
                     this->canMove.push_back(forward2Cell);
                 }
@@ -52,51 +52,40 @@ void Pawn::updateMoves(){
     if(this->position.y != 0)
     {
         sf::Vector2i forwardLeftCell = {this->position.x - 1*this->direction, this->position.y-1};
-        Cell* cell = board->objectGrid[forwardLeftCell.x][forwardLeftCell.y];
+        Cell* cell = board->cellAt(forwardLeftCell);
 
-        // Move move(board->turnNumber, this, cell, true, board);
-
-        if(true){    
+        this->couldTake.push_back(forwardLeftCell);
     
-            if(this->board->squareIsOccupied(forwardLeftCell))
+        if(this->board->squareIsOccupied(forwardLeftCell))
+        {
+            if(!cell->isEmpty())
             {
-                Piece* forwLeftPiece = board->objectGrid[forwardLeftCell.x][forwardLeftCell.y]->piece;
-                if(forwLeftPiece != nullptr)
+                if(cell->piece->color != this->color)
                 {
-                    if(board->objectGrid[forwardLeftCell.x][forwardLeftCell.y]->piece->color != this->color)
-                    {
-                        this->canTake.push_back(forwardLeftCell);
-                        this->couldTake.push_back(forwardLeftCell);
-                    }
+                    this->canTake.push_back(forwardLeftCell);
+                    this->couldTake.push_back(forwardLeftCell);
                 }
             }
-            this->couldTake.push_back(forwardLeftCell);
         }
     }
     // Checks if the pawn is on the right side of the board
     if(this->position.y != 7)
     {
         sf::Vector2i forwardRightCell = {this->position.x - 1*this->direction, this->position.y+1};
-        Cell* cell = board->objectGrid[forwardRightCell.x][forwardRightCell.y];
+        Cell* cell = board->cellAt(forwardRightCell);
 
-        // Move move(board->turnNumber, this, cell, true, board);
-
-        if(true){    
+        this->couldTake.push_back(forwardRightCell);
     
-            if(this->board->squareIsOccupied(forwardRightCell))
+        if(this->board->squareIsOccupied(forwardRightCell))
+        {
+            if(!cell->isEmpty())
             {
-                Piece* forwLeftPiece = board->objectGrid[forwardRightCell.x][forwardRightCell.y]->piece;
-                if(forwLeftPiece != nullptr)
+                if(cell->piece->color != this->color)
                 {
-                    if(board->objectGrid[forwardRightCell.x][forwardRightCell.y]->piece->color != this->color)
-                    {
-                        this->canTake.push_back(forwardRightCell);
-                        this->couldTake.push_back(forwardRightCell);
-                    }
+                    this->canTake.push_back(forwardRightCell);
+                    this->couldTake.push_back(forwardRightCell);
                 }
             }
-    
-            this->couldTake.push_back(forwardRightCell);
         }
     }
 }

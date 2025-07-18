@@ -12,12 +12,11 @@ Queen::Queen(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): Piec
     ;
 }
 
-void Queen::updateMoves(){
+void Queen::updatePseudoMoves(){
 
     this->canMove = {};
     this->canTake = {};
     this->couldTake = {};
-
     // * Check cells where to move and take (I copied the code form the bishop and the rook :)
     // Check down-right diagonal
     for(int i = 1; i < 8; i++){
@@ -34,16 +33,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check down-left diagonal
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x + i, this->position.y - i};
@@ -59,16 +58,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check up-right diagonal
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x - i, this->position.y + i};
@@ -84,16 +83,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check up-left diagonal
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x - i, this->position.y - i};
@@ -109,17 +108,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }    
-    
+    } 
     // Check right... i don't know
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x, this->position.y + i};
@@ -135,16 +133,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check left
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x, this->position.y - i};
@@ -160,16 +158,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check up
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x - i, this->position.y};
@@ -185,16 +183,16 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
+    } 
     // Check down
     for(int i = 1; i < 8; i++){
         sf::Vector2i cellToCheck = {this->position.x + i, this->position.y};
@@ -210,18 +208,17 @@ void Queen::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }    
+    } 
 }
-
 
 void Queen::updateBoardCastleRights(){
     

@@ -31,6 +31,8 @@ class Cell: public sf::RectangleShape{
         void setPiece(Piece* piece);
 
         bool isEmpty();
+
+        bool hasEnemyPiece(char color);
 };
 
 #endif

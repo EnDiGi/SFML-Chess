@@ -7,6 +7,7 @@
 #include "../include/moveCircle.h"
 #include "../include/utils.h"
 #include <iostream>
+#include <algorithm>
 
 int main()
 {
@@ -107,14 +108,7 @@ int main()
                             moveCircles.clear();            
                             board.turn = opponent(circle.pieceToMove->color);
 
-                            // Big O notation will suffer for this loop... again
-                            for(int k = 0; k < 8; k++){
-                                for(int l = 0; l < 8; l++){
-                                    if(board.pieceAt(k, l) != nullptr){
-                                        board.pieceAt(k, l)->updateMoves();
-                                    }
-                                }
-                            }
+                            board.updateMoves();
                         }
                     } 
                 }
@@ -127,16 +121,26 @@ int main()
         toDraw.push_back(&turnText);
 
         
-        // Display the last 10 moves (5 moves for black, 5 moves for white)int totalMoves = board.moves.size(); 
+        // Display the last 10 moves (5 moves for black, 5 moves for white)
+        std::stack<Move> tempStack = board.moves;
+        std::vector<Move> moves;
+
+        while (!tempStack.empty()) {
+            moves.push_back(tempStack.top());
+            tempStack.pop();
+        }
+
+        std::reverse(moves.begin(), moves.end());
+
         int start = std::max(0, (int)board.moves.size() - 10);
         int row = start + 1;
-        for(int i = start; i < board.moves.size(); i += 2)
+        for(int i = start; i < moves.size(); i += 2)
         {
-            Move* whiteMove = board.moves[i];
+            Move whiteMove = moves[i];
 
-            if(whiteMove->piece->color == 'b'){
+            if(whiteMove.piece->color == 'b'){
                 i--;
-                whiteMove = board.moves[i];
+                whiteMove = moves[i];
             }
 
             double y = (row - start) * 70;
@@ -144,18 +148,18 @@ int main()
             sf::Text rowText(font, std::to_string(row));
             rowText.setPosition(sf::Vector2f(910, y));
 
-            sf::Text whiteMoveText(font, whiteMove->id, 30);
+            sf::Text whiteMoveText(font, whiteMove.id, 30);
             whiteMoveText.setPosition(sf::Vector2f(950, y));
 
             moveTexts.push_back(rowText);
             moveTexts.push_back(whiteMoveText);
 
             // If the last move is white's so ther isn't any black move, break the loop
-            if(i == board.moves.size() - 1) break;
+            if(i == moves.size() - 1) break;
 
-            Move* blackMove = board.moves[i + 1];
+            Move blackMove = moves[i + 1];
 
-            sf::Text blackMoveText(font, blackMove->id, 30);
+            sf::Text blackMoveText(font, blackMove.id, 30);
             blackMoveText.setPosition(sf::Vector2f(1090, y));
 
             moveTexts.push_back(blackMoveText);

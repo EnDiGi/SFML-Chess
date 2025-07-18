@@ -12,7 +12,7 @@ Rook::Rook(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): Piece(
     ;
 }
 
-void Rook::updateMoves(){
+void Rook::updatePseudoMoves(){
 
     this->canMove = {};
     this->canTake = {};
@@ -24,7 +24,7 @@ void Rook::updateMoves(){
         sf::Vector2i cellToCheck = {this->position.x, this->position.y + i};
 
         if(this->board->isInsideBoard(cellToCheck))
-        {            
+        {
             this->couldTake.push_back(cellToCheck);
 
             if(!this->board->squareIsOccupied(cellToCheck))
@@ -34,11 +34,11 @@ void Rook::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
@@ -59,11 +59,11 @@ void Rook::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
@@ -74,7 +74,7 @@ void Rook::updateMoves(){
         sf::Vector2i cellToCheck = {this->position.x - i, this->position.y};
 
         if(this->board->isInsideBoard(cellToCheck))
-        {            
+        {
             this->couldTake.push_back(cellToCheck);
 
             if(!this->board->squareIsOccupied(cellToCheck))
@@ -84,11 +84,11 @@ void Rook::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
@@ -99,7 +99,7 @@ void Rook::updateMoves(){
         sf::Vector2i cellToCheck = {this->position.x + i, this->position.y};
 
         if(this->board->isInsideBoard(cellToCheck))
-        {            
+        {
             this->couldTake.push_back(cellToCheck);
 
             if(!this->board->squareIsOccupied(cellToCheck))
@@ -109,18 +109,16 @@ void Rook::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[cellToCheck.x][cellToCheck.y]->piece->color != this->color)
+                if(this->board->pieceAt(cellToCheck)->color != this->color)
                 {
                     this->canTake.push_back(cellToCheck);
                 }
-                break; // Do not check behind enemy pieces
+                break; // Do not check behind enemy pieces that are not the king
             }
         } else {
             break; // Do not check farther outside the board
         }
-    }
-
-    
+    }    
 }
 
 void Rook::updateBoardCastleRights(){

@@ -4,6 +4,7 @@
 #include "../../include/cell.h"
 #include "../../include/utils.h"
 #include "../../include/move.h"
+#include "../../include/chessConstants.h"
 #include <vector>
 #include <iostream>
 #include <algorithm>
@@ -37,8 +38,46 @@ Piece::~Piece(){
     ;
 }
 
-void Piece::updateMoves() {
+void Piece::updatePseudoMoves(){
     ;
+}
+ 
+void Piece::updateLegalMoves(){
+
+    for(sf::Vector2i pseudo : this->couldTake){
+
+        board->movePiece(this, board->cellAt(pseudo));
+        if(this->name == "king"){
+            std::cout << "can castle n times with n = " << this->canCastleWith.size() << std::endl;
+        }
+        board->updateMoves(true);
+
+        if(this->name == "king"){
+            std::cout << "after updating the moves can castle n times with n = " << this->canCastleWith.size() << std::endl;
+        }
+        std::vector<Piece*> kings = this->board->getPieceOnBoard(this->color, "king");
+
+        if(kings.empty() || !kings[0]->isSafe())
+        {
+            std::cout << "illegal move detected: king is not safe after move " << this->name << " to " << pseudo.x << " " << pseudo.y << std::endl;
+            this->couldTake.erase(std::remove(this->couldTake.begin(), this->couldTake.end(), pseudo), this->couldTake.end());
+            this->canTake.erase(std::remove(this->canTake.begin(), this->canTake.end(), pseudo), this->canTake.end());
+            this->canMove.erase(std::remove(this->canMove.begin(), this->canMove.end(), pseudo), this->canMove.end());
+        }
+
+        board->undoMove();
+    }
+}
+
+void Piece::updateMoves(bool onlyPseudo) {
+    
+    this->canMove.clear();
+    this->canTake.clear();
+    this->couldTake.clear();
+
+    this->updatePseudoMoves();
+
+    if(false) this->updateLegalMoves();
 }
 
 void Piece::makeMove(Cell* target) {

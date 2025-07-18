@@ -25,7 +25,7 @@ class Pawn: public Piece{
         Pawn(char symbol, Chessboard &board, sf::Vector2i pos, bool moved);
 
         // Updates available moves and takes
-        void updateMoves() override;
+        void updatePseudoMoves() override;
         
         void updateBoardCastleRights() override;
 

@@ -14,7 +14,7 @@ King::King(char symbol, Chessboard &board, sf::Vector2i pos, bool moved): Piece(
     ;
 }
 
-void King::updateMoves(){
+void King::updatePseudoMoves(){
 
     this->canMove = {};
     this->canTake = {};
@@ -51,7 +51,7 @@ void King::updateMoves(){
             else 
             {   
                 // Checks if the piece in the cell we're currently checking is of the enemy color
-                if(this->board->objectGrid[pos.x][pos.y]->piece->color != this->color)
+                if(this->board->pieceAt(pos)->color != this->color)
                 {
                     this->canTake.push_back(pos);
                 }
@@ -59,8 +59,7 @@ void King::updateMoves(){
         }
     }
 
-
-
+    
     // * Check for castling
     std::vector<Piece*> rooks = this->board->getPieceOnBoard(this->color, "rook");
 
@@ -80,7 +79,6 @@ void King::updateMoves(){
 
             if(isSafe && this->isSafe(castleCircleCell) && this->isSafe(step))
             {
-                this->canMove.push_back(step);
                 this->canCastleWith.push_back(castleCircleCell);
             }
         }
